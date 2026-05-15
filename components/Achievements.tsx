@@ -97,6 +97,18 @@ const achievements = [
     icon: "◎",
     category: "GEN AI",
   },
+  {
+    title: "Generative AI",
+    issuer: "NASSCOM",
+    date: "2025",
+    description:
+      "Learned the fundamentals of Generative AI and its applications.",
+    link: "https://drive.google.com/file/d/1YUJEGEc_w8b_QnhrsNucGzP5zRbuX3sN/view?usp=sharing",
+    officialLink: "https://nasscom.in/",
+    color: "#ec4899",
+    icon: "◎",
+    category: "GEN AI",
+  },
 ];
 
 /* ─── Animated Counter ── */
