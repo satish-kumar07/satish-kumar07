@@ -7,7 +7,7 @@ const educationData = [
     degree: "B.Tech in Computer Science & Engineering (AI/ML)",
     institution: "Lovely Professional University",
     period: "2023 – Present",
-    score: "CGPA: 7.48",
+    score: "CGPA: 7.79",
     status: "In Progress",
   },
   {
