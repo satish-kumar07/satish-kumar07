@@ -33,7 +33,15 @@ export default function Hero() {
 
             {/* Name */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground mb-3 leading-[1.1]">
-              SATISH KUMAR
+              <span className="inline-block transition-all duration-300 ease-out hover:text-blue-600 dark:hover:text-blue-400 hover:-translate-y-0.5 cursor-default mr-3 sm:mr-4">
+                PRAJAPATI
+              </span>
+              <span className="inline-block transition-all duration-300 ease-out hover:text-indigo-600 dark:hover:text-indigo-400 hover:-translate-y-0.5 cursor-default mr-3 sm:mr-4">
+                SATISH
+              </span>
+              <span className="inline-block transition-all duration-300 ease-out hover:text-sky-600 dark:hover:text-sky-400 hover:-translate-y-0.5 cursor-default">
+                KUMAR
+              </span>
             </h1>
 
             {/* Professional Role */}

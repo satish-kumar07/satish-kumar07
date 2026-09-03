@@ -42,7 +42,7 @@ export default function Navbar() {
           href="/"
           className="text-base font-semibold tracking-tight text-foreground hover:text-accent transition-colors flex items-center gap-2"
         >
-          <span className="font-semibold text-lg">Satish Kumar</span>
+          <span className="font-semibold text-lg">PSK</span>
           <span className="text-xs font-mono text-muted hidden sm:inline-block px-2 py-0.5 rounded bg-cardHover text-muted">
             AI/ML Engineer
           </span>

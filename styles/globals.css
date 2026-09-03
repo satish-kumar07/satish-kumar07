@@ -14,14 +14,14 @@
 }
 
 .dark {
-  --bg: #0F0F12;
-  --card: #18181C;
+  --bg: #000000;
+  --card: #0A0A0C;
   --fg: #F4F4F5;
   --muted: #A1A1AA;
   --subtle: #71717A;
-  --border: #27272E;
-  --card-hover: #222228;
-  --input-bg: #121216;
+  --border: #1E1E24;
+  --card-hover: #141418;
+  --input-bg: #0C0C0E;
 }
 
 @layer base {

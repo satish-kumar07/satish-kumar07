@@ -18,7 +18,7 @@ const ThemeContext = createContext<ThemeContextType>({
 export const useTheme = () => useContext(ThemeContext);
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
   useEffect(() => {
     // 1. Check localStorage
     const savedTheme = localStorage.getItem("portfolio-theme") as Theme | null;
@@ -26,11 +26,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       setThemeState(savedTheme);
       document.documentElement.classList.toggle("dark", savedTheme === "dark");
     } else {
-      // 2. Check system preference
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const initialTheme = prefersDark ? "dark" : "light";
-      setThemeState(initialTheme);
-      document.documentElement.classList.toggle("dark", prefersDark);
+      // 2. Default to true black dark theme
+      setThemeState("dark");
+      document.documentElement.classList.add("dark");
     }
   }, []);
 
