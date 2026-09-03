@@ -1,41 +1,43 @@
 import React from "react";
 import Head from "next/head";
 import Navbar from "@/components/Navbar";
-import dynamic from "next/dynamic";
-const Background = dynamic(() => import("@/components/Background"), { ssr: false });
+import InteractiveBackground from "@/components/InteractiveBackground";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import TechStack from "@/components/TechStack";
-import Achievements from "@/components/Achievements";
 import Projects from "@/components/Projects";
-import GithubStats from "@/components/GithubStats";
 import Experience from "@/components/Experience";
-// import LeetcodeStats from "@/components/LeetcodeStats";
+import Achievements from "@/components/Achievements";
+import GithubStats from "@/components/GithubStats";
 import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>Prajapati Satish Kumar | AI Developer</title>
-        <meta name="description" content="Futuristic AI Developer Portfolio" />
+        <title>Satish Kumar — AI/ML Engineer</title>
+        <meta
+          name="description"
+          content="Portfolio of Satish Kumar, AI/ML Engineer specializing in Machine Learning, Generative AI, LLM/RAG architectures, and Computer Vision systems."
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Background />
       <Navbar />
 
-      <main className="min-h-screen">
-        <Hero />
-        <About />
-        <TechStack />
-        <Achievements />
-        <Projects />
-        <Experience />
-        <GithubStats />
-        {/* <LeetcodeStats /> */}
-        <Contact />
+      <main className="relative min-h-screen bg-background">
+        <InteractiveBackground />
+        <div className="relative z-10">
+          <Hero />
+          <About />
+          <TechStack />
+          <Projects />
+          <Experience />
+          <Achievements />
+          <GithubStats />
+          <Contact />
+        </div>
       </main>
     </>
   );

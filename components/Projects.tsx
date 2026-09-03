@@ -1,216 +1,10 @@
 "use client";
-import React, { useRef, useState, useCallback } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import React, { useState } from "react";
 import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
-import MagicBento, { MagicBentoCard } from "./MagicBento";
-import ProjectModal from "./ProjectModal";
+import { HiArrowRight } from "react-icons/hi";
 import projects, { Project } from "@/data/projectsData";
+import ProjectModal from "./ProjectModal";
 
-/* ─── Per-project accent colors ── */
-const ACCENTS = ["#00f0ff", "#a855f7", "#f97316", "#34d399", "#ec4899"];
-
-/* ─── Spotlight Card with 3D tilt ── */
-const ProjectCard = ({
-  project,
-  idx,
-  onOpen,
-}: {
-  project: Project;
-  idx: number;
-  onOpen: (p: Project) => void;
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const springX = useSpring(rotateX, { stiffness: 200, damping: 25 });
-  const springY = useSpring(rotateY, { stiffness: 200, damping: 25 });
-  const [hovered, setHovered] = useState(false);
-  const accent = ACCENTS[idx % ACCENTS.length];
-
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      mouseX.set(e.clientX - rect.left);
-      mouseY.set(e.clientY - rect.top);
-      rotateX.set(((e.clientY - rect.top - rect.height / 2) / rect.height) * -8);
-      rotateY.set(((e.clientX - rect.left - rect.width / 2) / rect.width) * 8);
-    },
-    [mouseX, mouseY, rotateX, rotateY]
-  );
-
-  const handleMouseLeave = useCallback(() => {
-    setHovered(false);
-    rotateX.set(0);
-    rotateY.set(0);
-  }, [rotateX, rotateY]);
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      onClick={() => onOpen(project)}
-      style={{
-        rotateX: springX,
-        rotateY: springY,
-        transformPerspective: 800,
-        transformStyle: "preserve-3d",
-      }}
-      className="h-full cursor-pointer group relative"
-    >
-      {/* Cursor border glow */}
-      {hovered && (
-        <motion.div
-          className="absolute -inset-[1px] rounded-2xl pointer-events-none z-0"
-          style={{
-            background: `radial-gradient(350px circle at ${mouseX.get()}px ${mouseY.get()}px, ${accent}30, transparent 50%)`,
-          }}
-        />
-      )}
-
-      <MagicBentoCard
-        className="relative h-full rounded-2xl bg-white/[0.02] border border-white/[0.06] backdrop-blur-sm overflow-hidden transition-all duration-500 group-hover:border-white/[0.12] group-hover:bg-white/[0.04] z-10"
-        glowColor="0, 240, 255"
-      >
-        {/* Interior cursor spotlight */}
-        {hovered && (
-          <motion.div
-            className="absolute pointer-events-none z-0"
-            style={{
-              width: 220,
-              height: 220,
-              x: mouseX.get() - 110,
-              y: mouseY.get() - 110,
-              background: `radial-gradient(circle, ${accent}10 0%, transparent 70%)`,
-              borderRadius: "50%",
-            }}
-          />
-        )}
-
-        <div className="relative z-10 p-6 flex flex-col h-full">
-
-          {/* ── Top: Number + Status ── */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <span
-                className="text-2xl font-orbitron font-black opacity-20 group-hover:opacity-50 transition-opacity duration-500"
-                style={{ color: accent }}
-              >
-                {String(idx + 1).padStart(2, "0")}
-              </span>
-              <div className="flex items-center gap-1.5">
-                <motion.div
-                  className="w-1.5 h-1.5 rounded-full"
-                  style={{ background: accent }}
-                  animate={hovered ? {
-                    boxShadow: [`0 0 3px ${accent}60`, `0 0 10px ${accent}`, `0 0 3px ${accent}60`],
-                  } : {}}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                <span className="text-[9px] font-orbitron text-gray-600 uppercase tracking-[0.2em]">
-                  Active
-                </span>
-              </div>
-            </div>
-            <span className="text-[9px] font-orbitron text-gray-700 uppercase tracking-widest">
-              {project.tech.length} Modules
-            </span>
-          </div>
-
-          {/* ── Accent Line ── */}
-          <div className="mb-5 relative">
-            <div className="h-[1px] w-full bg-white/[0.06]" />
-            <motion.div
-              className="absolute top-0 left-0 h-[1px]"
-              style={{ background: accent }}
-              initial={{ width: 0 }}
-              whileInView={{ width: "35%" }}
-              transition={{ duration: 0.7, delay: idx * 0.08 + 0.3 }}
-              viewport={{ once: true }}
-            />
-          </div>
-
-          {/* ── Title ── */}
-          <h3 className="text-lg font-orbitron font-bold text-white/90 group-hover:text-white transition-colors duration-300 mb-3 leading-tight">
-            {project.title}
-          </h3>
-
-          {/* ── Description ── */}
-          <p className="text-gray-500 font-inter text-sm leading-relaxed mb-5 group-hover:text-gray-400 transition-colors duration-300 flex-grow">
-            {project.description}
-          </p>
-
-          {/* ── Tech Tags ── */}
-          <div className="flex flex-wrap gap-1.5 mb-5">
-            {project.tech.map((t, i) => (
-              <span
-                key={i}
-                className="text-[9px] font-orbitron tracking-wider px-2 py-1 rounded-md border uppercase transition-all duration-300"
-                style={{
-                  color: hovered ? accent : "rgb(156,163,175)",
-                  borderColor: hovered ? `${accent}30` : "rgba(255,255,255,0.06)",
-                  background: hovered ? `${accent}08` : "transparent",
-                }}
-              >
-                {t}
-              </span>
-            ))}
-          </div>
-
-          {/* ── Bottom Actions ── */}
-          <div className="mt-auto flex items-center gap-3 pt-4 border-t border-white/[0.04]">
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-2 text-[10px] font-orbitron text-gray-500 hover:text-gray-200 uppercase tracking-widest transition-colors py-1.5"
-            >
-              <FaGithub size={14} /> Code
-            </a>
-            <a
-              href={project.live}
-              target="_blank"
-              rel="noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1.5 text-[10px] font-orbitron uppercase tracking-widest px-3 py-1.5 rounded-md border transition-all duration-300"
-              style={{
-                color: accent,
-                borderColor: `${accent}30`,
-                background: `${accent}08`,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = `${accent}60`;
-                e.currentTarget.style.background = `${accent}15`;
-                e.currentTarget.style.boxShadow = `0 0 15px ${accent}15`;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = `${accent}30`;
-                e.currentTarget.style.background = `${accent}08`;
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              Live <FaExternalLinkAlt size={8} />
-            </a>
-            <button
-              onClick={(e) => { e.stopPropagation(); onOpen(project); }}
-              className="ml-auto text-[9px] font-orbitron text-gray-600 hover:text-gray-300 uppercase tracking-widest transition-colors"
-            >
-              Details →
-            </button>
-          </div>
-
-        </div>
-      </MagicBentoCard>
-    </motion.div>
-  );
-};
-
-/* ─── Main Component ── */
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -222,98 +16,132 @@ export default function Projects() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setTimeout(() => setSelectedProject(null), 300);
+    setTimeout(() => setSelectedProject(null), 250);
   };
 
   return (
     <>
-      <section id="projects" className="py-24 relative z-10 bg-transparent">
-        <div className="max-w-6xl mx-auto px-4">
-
-          {/* ─── Header ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-8"
-          >
-            <h2 className="text-4xl md:text-5xl font-orbitron font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple inline-block">
-              PROJECTS
-            </h2>
-            <div className="h-1 w-24 bg-neon-purple mx-auto mt-4 shadow-neon-purple" />
-          </motion.div>
-
-          {/* ─── Stats ── */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="flex justify-center gap-8 md:gap-12 mb-14"
-          >
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl md:text-3xl font-orbitron font-bold text-neon-cyan drop-shadow-[0_0_10px_rgba(0,240,255,0.4)]">
-                {projects.length}
+      <section id="projects" className="py-20 md:py-24 border-b border-border">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-wider text-accent font-semibold">
+                03 / Featured Work
               </span>
-              <span className="text-[9px] font-orbitron text-gray-600 uppercase tracking-[0.3em]">Built</span>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground mt-1">
+                Selected Projects
+              </h2>
+              <p className="text-sm text-muted mt-1.5 max-w-xl">
+                Practical implementations in computer vision, retrieval-augmented generation, machine learning, and web platforms.
+              </p>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl md:text-3xl font-orbitron font-bold text-neon-purple drop-shadow-[0_0_10px_rgba(191,0,255,0.4)]">
-                {new Set(projects.flatMap(p => p.tech)).size}
-              </span>
-              <span className="text-[9px] font-orbitron text-gray-600 uppercase tracking-[0.3em]">Technologies</span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-2xl md:text-3xl font-orbitron font-bold text-green-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.4)]">
-                {projects.filter(p => p.live && !p.live.includes("github")).length}
-              </span>
-              <span className="text-[9px] font-orbitron text-gray-600 uppercase tracking-[0.3em]">Live</span>
-            </div>
-          </motion.div>
 
-          {/* ─── Grid ── */}
-          <MagicBento
-            enableStars={false}
-            enableSpotlight={true}
-            enableBorderGlow={true}
-            enableTilt={false}
-            enableMagnetism={false}
-            clickEffect={false}
-            spotlightRadius={400}
-            glowColor="0, 240, 255"
-          >
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-              }}
-            >
-              {projects.map((project, idx) => (
-                <motion.div
-                  key={idx}
-                  variants={{
-                    hidden: { opacity: 0, y: 25 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-                  }}
-                  className="h-full"
+            <div className="text-xs font-mono text-subtle">
+              {projects.length} Projects Total
+            </div>
+          </div>
+
+          {/* Projects Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {projects.map((project, idx) => {
+              const hasLive = project.live && !project.live.includes("github.com");
+
+              return (
+                <article
+                  key={project.slug}
+                  onClick={() => handleOpenModal(project)}
+                  className="group bg-card rounded-xl border border-border p-7 flex flex-col justify-between shadow-card hover:shadow-card-hover hover:border-accent/40 hover:-translate-y-1 transition-all duration-200 cursor-pointer"
                 >
-                  <ProjectCard
-                    project={project}
-                    idx={idx}
-                    onOpen={handleOpenModal}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          </MagicBento>
+                  <div>
+                    {/* Header: Project Index & Category */}
+                    <div className="flex items-center justify-between gap-4 mb-3">
+                      <span className="text-xs font-mono text-subtle font-medium">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+
+                      {hasLive ? (
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          Live Demo
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-mono text-muted bg-cardHover px-2 py-0.5 rounded">
+                          Open Source
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-accent transition-colors mb-2 leading-snug">
+                      {project.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm text-muted leading-relaxed mb-6">
+                      {project.description}
+                    </p>
+                  </div>
+
+                  <div>
+                    {/* Technology tags */}
+                    <div className="flex flex-wrap gap-1.5 mb-6">
+                      {project.tech.map((t, tIdx) => (
+                        <span
+                          key={tIdx}
+                          className="text-[11px] font-mono px-2.5 py-1 rounded bg-background border border-border text-foreground"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Bottom Actions */}
+                    <div
+                      className="pt-4 border-t border-border flex items-center justify-between gap-3 text-xs font-medium"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex items-center gap-4">
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
+                        >
+                          <FaGithub size={14} />
+                          <span>Code →</span>
+                        </a>
+
+                        {hasLive && (
+                          <a
+                            href={project.live}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-accent hover:text-accent-hover transition-colors font-medium"
+                          >
+                            <span>Live Demo</span>
+                            <FaExternalLinkAlt size={10} />
+                          </a>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => handleOpenModal(project)}
+                        className="inline-flex items-center gap-1 text-muted hover:text-foreground transition-colors"
+                      >
+                        <span>Details</span>
+                        <HiArrowRight size={13} />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
 
+      {/* Project Details Modal */}
       <ProjectModal
         project={selectedProject}
         isOpen={isModalOpen}

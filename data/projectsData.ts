@@ -14,60 +14,59 @@ export interface Project {
 const projects: Project[] = [
   {
     slug: "smart-parking-system",
-    title: "Smart Parking System",
+    title: "Smart Parking Computer Vision System",
     description:
-      "Real-time parking slot monitoring, QR-based check-in, YOLOv8 number plate recognition, and IoT sensor integration.",
+      "Real-time automated parking slot detection, license plate recognition (ALPR) via YOLOv8, and IoT telemetry on a responsive dashboard.",
     overview:
-      "A comprehensive smart parking solution that leverages computer vision and IoT sensors to automate parking management. The system provides real-time slot availability, automated vehicle identification through license plate recognition, and a seamless QR-based check-in experience.",
+      "An intelligent, edge-capable parking operations platform that bridges computer vision with IoT telemetry. The system automates vehicle ingress and egress, monitors slot occupancy in real time, and streamlines parking administration without physical ticketing.",
     problem:
-      "Traditional parking systems rely on manual monitoring, leading to inefficiency, long wait times, and poor space utilization. Drivers waste time and fuel searching for available spots, especially in high-traffic urban areas.",
+      "Conventional urban parking relies heavily on manual coordination and physical attendants, causing congestion, fuel wastage, and underutilized spaces. Lack of live occupancy visibility leads to average search delays exceeding 15 minutes in peak environments.",
     solution:
-      "Built an intelligent parking system using YOLOv8 for real-time number plate recognition and IoT ultrasonic sensors for slot detection. The web dashboard displays live availability, while QR codes enable instant check-in/check-out without human intervention.",
+      "Engineered an automated pipeline utilizing fine-tuned YOLOv8 for automated license plate recognition (ALPR) coupled with ultrasonic IoT sensors for slot-level occupancy detection. Integrated with Firebase for sub-second dashboard synchronization and QR-based automated billing.",
     tech: [
-      "React",
-      "Tailwind",
-      "Firebase",
+      "Python",
       "YOLOv8",
       "OpenCV",
-      "Jupyter Notebook",
-      "JavaScript",
+      "React",
+      "Firebase",
+      "IoT Sensors",
+      "Tailwind CSS",
     ],
     github: "https://github.com/satish-kumar07/Smart-Parking-System",
     live: "https://smart-parking.ramdev.xyz/",
   },
   {
     slug: "campus-management-system",
-    title: "Campus Management System",
+    title: "Campus Operations & Biometrics Platform",
     description:
-      "AI face recognition attendance, automated email notifications, food ordering module, and backend optimization.",
+      "Enterprise campus management suite integrating facial recognition biometrics for automated attendance, transactional food ordering, and optimized Django services.",
     overview:
-      "An all-in-one campus management platform that modernizes attendance tracking, communication, and food ordering using AI and automation. Designed to reduce administrative overhead and improve the student experience.",
+      "A unified administrative and student portal engineered to eliminate paper-based processes across institutional operations. Employs deep-learning facial biometrics for automated class attendance alongside integrated cafeteria logistics.",
     problem:
-      "University campuses often rely on outdated attendance systems (manual roll calls), scattered communication channels, and inefficient canteen ordering processes. This leads to proxy attendance, missed announcements, and long food queues.",
+      "University campuses face significant administrative overhead due to manual attendance roll calls (prone to proxy fraud), fragmented announcement channels, and long physical queues during cafeteria peak hours.",
     solution:
-      "Implemented AI-powered face recognition for tamper-proof attendance, automated email notifications for real-time campus updates, and a streamlined food ordering module. The Django backend is optimized for handling concurrent requests efficiently.",
-    tech: ["Python", "Django", "OpenCV", "SQLite", "HTML", "CSS"],
+      "Built a secure biometric attendance pipeline using OpenCV facial landmark detection and embedding matching, eliminating proxies with instant timestamp verification. Structured a high-concurrency Django backend with automated email dispatch and transactional food ordering.",
+    tech: ["Python", "Django", "OpenCV", "SQLite", "JavaScript", "HTML5", "CSS3"],
     github: "https://github.com/satish-kumar07/Campus-Management-System",
     live: "https://campus-management-system-6mbh.onrender.com/",
   },
   {
     slug: "rag-on-dsa",
-    title: "RAG on DSA",
+    title: "DSA Knowledge Assistant (RAG Pipeline)",
     description:
-      "A developer-focused AI assistant that uses Retrieval-Augmented Generation to provide accurate explanations for Data Structures and Algorithms queries by combining semantic search with LLM reasoning.",
+      "Retrieval-Augmented Generation architecture combining semantic dense vector search with LLMs to deliver grounded, hallucination-free DSA explanations.",
     overview:
-      "An intelligent coding assistant that combines the power of Large Language Models with a curated DSA knowledge base. It uses Retrieval-Augmented Generation to deliver precise, contextual explanations and code examples for any DSA topic.",
+      "A specialized developer assistant designed for Computer Science students and engineers. By pairing large language models with a domain-curated knowledge index, it answers complex algorithmic queries with verified code implementations and computational complexity analyses.",
     problem:
-      "Generic LLMs can hallucinate or provide outdated information when asked about specific DSA concepts. Developers need accurate, well-structured explanations with proper code implementations, not vague or incorrect answers.",
+      "General-purpose LLMs frequently produce subtle semantic hallucinations, syntactically flawed code, or suboptimal algorithmic complexities when tasked with specialized data structures and algorithm interview problems.",
     solution:
-      "Built a RAG pipeline that indexes a curated DSA corpus using semantic embeddings, retrieves the most relevant passages for a query, and augments the LLM prompt with verified context — resulting in accurate, hallucination-free responses.",
+      "Constructed an end-to-end RAG workflow: ingested and chunked authoritative DSA textbooks and problem archives, computed dense vector embeddings, and implemented top-k semantic retrieval to augment the LLM context with precise factual grounding before generation.",
     tech: [
       "Python",
-      "Jupyter Notebook",
-      "LLM",
-      "RAG",
-      "HTML",
-      "CSS",
+      "RAG Architecture",
+      "LLMs",
+      "Vector Embeddings",
+      "Semantic Search",
       "JavaScript",
     ],
     github: "https://github.com/satish-kumar07/RAG_ON_DSA",
@@ -75,32 +74,39 @@ const projects: Project[] = [
   },
   {
     slug: "ivy-league-opportunities",
-    title: "Real-Time Ivy League OI SCI",
+    title: "Academic Opportunity Intelligence Engine",
     description:
-      "A comprehensive platform that aggregates real-time academic opportunities from Ivy League universities and matches them to student profiles using AI-powered analysis.",
+      "Distributed web aggregation and NLP-driven recommendation engine matching student academic profiles to Ivy League research positions and fellowships.",
     overview:
-      "An AI-driven platform that scrapes, aggregates, and curates academic opportunities (scholarships, research positions, internships) from top Ivy League institutions. It uses intelligent matching to connect students with the most relevant opportunities.",
+      "An automated intelligence tool that aggregates, normalizes, and filters research fellowships, scholarships, and academic openings across top-tier institutions, matching qualified applicants based on domain expertise and profile credentials.",
     problem:
-      "Students seeking academic opportunities at Ivy League universities face information overload — scattered across multiple websites, with varying deadlines and eligibility criteria. Finding the right fit is time-consuming and error-prone.",
+      "Information regarding prestigious academic grants, laboratory research fellowships, and visiting student programs is scattered across hundreds of decentralized department pages with disjointed deadlines and criteria, causing students to miss critical deadlines.",
     solution:
-      "Developed a real-time aggregation engine that collects opportunities from multiple sources, normalizes the data, and uses AI-powered profile matching to recommend the best-fit opportunities for each student's background and interests.",
-    tech: ["Python", "HTML", "CSS", "JavaScript"],
+      "Engineered automated scraping and normalization pipelines that periodically harvest departmental feeds, parse deadline metadata, and score candidate profiles against program requirements to deliver targeted, high-probability opportunity recommendations.",
+    tech: ["Python", "Web Scraping", "NLP", "JavaScript", "HTML5", "CSS3"],
     github:
       "https://github.com/satish-kumar07/Real-Time-Ivy-League-OI-SCI-main",
     live: "https://ivy-league-frontend-met5.onrender.com/",
   },
   {
     slug: "fake-account-detection",
-    title: "Fake Social Media Accounts Detection",
+    title: "Deceptive Social Media Account Classifier",
     description:
-      "A fake social media account is an inauthentic profile created for deception, spam, or manipulation, as opposed to genuine user accounts representing real individuals or legitimate organizations.",
+      "Supervised machine learning classification pipeline engineered to detect synthetic bot profiles and adversarial accounts using metadata heuristics.",
     overview:
-      "A machine learning system that analyzes social media profiles to detect fake, bot, or inauthentic accounts. It examines behavioral patterns, profile metadata, and engagement metrics to classify accounts with high accuracy.",
+      "A predictive machine learning framework developed to classify social media accounts as authentic or fraudulent. Evaluates behavioral signals, engagement distributions, and profile entropy to safeguard platforms against automated bot networks.",
     problem:
-      "Fake social media accounts undermine platform integrity through spam, misinformation, and social engineering attacks. Manual detection is impossible at scale, and existing automated systems have high false-positive rates.",
+      "Automated bot accounts and fraudulent profiles distort social sentiment, distribute malicious spam, and compromise platform security. Manual account auditing is impossible at web scale, while naive rule-based filters yield unacceptably high false-positive rates.",
     solution:
-      "Trained a classification model on a labeled dataset of real and fake accounts, analyzing features like follower-to-following ratio, post frequency, account age, bio patterns, and engagement metrics to achieve robust detection.",
-    tech: ["Python", "Jupyter Notebook"],
+      "Formulated a robust feature engineering pipeline extracting follower-to-following ratios, temporal posting frequencies, bio metadata patterns, and interaction entropy. Trained and benchmarked classification models with comprehensive cross-validation and ROC-AUC evaluation.",
+    tech: [
+      "Python",
+      "Scikit-Learn",
+      "Pandas",
+      "NumPy",
+      "Feature Engineering",
+      "Jupyter Notebook",
+    ],
     github:
       "https://github.com/satish-kumar07/Fake-Social-Media-Accounts-Detection",
     live: "https://github.com/satish-kumar07/Fake-Social-Media-Accounts-Detection",

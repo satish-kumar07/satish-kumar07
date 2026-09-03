@@ -1,192 +1,153 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { HiMenu, HiX, HiSun, HiMoon } from "react-icons/hi";
+import { useTheme } from "./ThemeProvider";
 
 const navItems = [
   { name: "About", href: "#about" },
-  { name: "Tech", href: "#tech" },
-  { name: "Achievements", href: "#achievements" },
+  { name: "Skills", href: "#skills" },
   { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
-  { name: "Github", href: "#stats" },
+  { name: "Certifications", href: "#certifications" },
   { name: "Contact", href: "#contact" },
 ];
 
-// Magnetic Hover Wrapper
-const MagneticWrap = ({ children, className }: { children: React.ReactNode, className?: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouse = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * 0.3, y: middleY * 0.3 });
-  };
-
-  const reset = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouse}
-      onMouseLeave={reset}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-// Glitch Logo text
-const HoverGlitchText = ({ text }: { text: string }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [displayText, setDisplayText] = useState(text);
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#%&*";
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isHovered) {
-      setDisplayText(text);
-      return;
-    }
-    let iteration = 0;
-    const interval = setInterval(() => {
-      setDisplayText(() =>
-        text
-          .split("")
-          .map((letter, index) => {
-            if (index < iteration) return text[index];
-            if (letter === " ") return " ";
-            return letters[Math.floor(Math.random() * letters.length)];
-          })
-          .join("")
-      );
-      if (iteration >= text.length) clearInterval(interval);
-      iteration += 1 / 2;
-    }, 40);
-    return () => clearInterval(interval);
-  }, [isHovered, text]);
+    setMounted(true);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <span
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className="cursor-crosshair transition-colors duration-300"
+    <header
+      className={`sticky top-0 z-50 w-full transition-colors duration-200 ${
+        scrolled
+          ? "bg-background/90 backdrop-blur-md border-b border-border shadow-xs"
+          : "bg-background border-b border-transparent"
+      }`}
     >
-      {displayText}
-    </span>
-  );
-};
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Brand Name */}
+        <Link
+          href="/"
+          className="text-base font-semibold tracking-tight text-foreground hover:text-accent transition-colors flex items-center gap-2"
+        >
+          <span className="font-semibold text-lg">Satish Kumar</span>
+          <span className="text-xs font-mono text-muted hidden sm:inline-block px-2 py-0.5 rounded bg-cardHover text-muted">
+            AI/ML Engineer
+          </span>
+        </Link>
 
-export default function Navbar() {
-  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
-  
-  // Mouse tracking for glowing border
-  const navRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!navRef.current) return;
-    const rect = navRef.current.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center pointer-events-none px-4">
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut", type: "spring", stiffness: 200, damping: 20 }}
-        className="pointer-events-auto relative rounded-full w-full max-w-[1200px] group shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
-        ref={navRef}
-        onMouseMove={handleMouseMove}
-      >
-        {/* Dynamic Glow Border Layer */}
-        <div className="absolute inset-0 bg-white/10 rounded-full" />
-        <div
-          className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0"
-          style={{
-            background: `radial-gradient(120px circle at ${mousePos.x}px ${mousePos.y}px, rgba(0, 240, 255, 0.8), transparent 100%)`,
-          }}
-        />
-
-        {/* Inner Content Layer */}
-        <div className="relative flex justify-between items-center px-6 md:px-8 py-3 bg-black/70 backdrop-blur-xl rounded-full m-[1px] z-10">
-          
-          {/* Left Side: Logo */}
-          <Link href="/" className="z-20 shrink-0">
-            <div className="text-xl md:text-2xl font-orbitron font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple cursor-pointer whitespace-nowrap">
-              <HoverGlitchText text="PSK.SYS" />
-            </div>
-          </Link>
-
-          {/* Middle: Navigation Links with Sliding Pill */}
-          <div className="hidden md:flex absolute inset-0 justify-center items-center pointer-events-none z-10 w-full">
-            <ul 
-              className="flex items-center gap-1 pointer-events-auto"
-              onMouseLeave={() => setHoveredNav(null)}
+        {/* Desktop Nav Links */}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted">
+          {navItems.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              className="hover:text-foreground transition-colors py-1 relative hover:underline decoration-accent/60 underline-offset-4"
             >
-              {navItems.map((item, idx) => {
-                const isHovered = hoveredNav === item.name;
-                
-                return (
-                  <li
-                    key={idx}
-                    className="relative px-3 py-2 cursor-pointer"
-                    onMouseEnter={() => setHoveredNav(item.name)}
-                  >
-                    <Link href={item.href} className={`relative z-10 text-[11px] lg:text-sm font-inter tracking-widest uppercase transition-colors duration-300 ${isHovered ? 'text-black font-bold' : 'text-gray-300 hover:text-white'}`}>
-                      {item.name}
-                    </Link>
-                    
-                    {/* The sliding pill background */}
-                    {isHovered && (
-                      <motion.div
-                        layoutId="nav-pill"
-                        className="absolute inset-0 bg-neon-cyan rounded-full shadow-[0_0_15px_rgba(0,240,255,0.6)]"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                      />
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+              {item.name}
+            </a>
+          ))}
+        </nav>
 
-          {/* Right Side: Actions (Resume & Hire Me) */}
-          <div className="hidden md:flex items-center gap-2 lg:gap-4 z-20 shrink-0">
-            <MagneticWrap>
-              <Link href="/resume">
-                <span className="flex items-center justify-center font-orbitron tracking-widest text-neon-purple border border-neon-purple/50 px-5 lg:px-6 h-9 lg:h-10 rounded-full hover:bg-neon-purple hover:text-white hover:shadow-[0_0_15px_rgba(191,0,255,0.6)] transition-all duration-300 uppercase cursor-pointer text-xs lg:text-[13px] group relative overflow-hidden whitespace-nowrap bg-black/50">
-                  <span className="relative z-10 font-bold">Resume</span>
-                </span>
-              </Link>
-            </MagneticWrap>
+        {/* Actions */}
+        <div className="hidden md:flex items-center gap-3">
+          {/* Theme Toggle Button */}
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md border border-border bg-card text-muted hover:text-foreground hover:bg-cardHover transition-all"
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? (
+                <HiSun size={17} className="text-amber-400" />
+              ) : (
+                <HiMoon size={17} className="text-[#555555]" />
+              )}
+            </button>
+          )}
 
-            <MagneticWrap>
-              <a
-                href="#contact"
-                className="flex items-center justify-center font-orbitron tracking-widest text-neon-cyan border border-neon-cyan/50 px-5 lg:px-6 h-9 lg:h-10 rounded-full hover:bg-neon-cyan hover:text-black hover:shadow-[0_0_15px_rgba(0,240,255,0.6)] transition-all duration-300 uppercase cursor-pointer text-xs lg:text-[13px] group relative overflow-hidden whitespace-nowrap bg-black/50"
-              >
-                <span className="relative z-10 font-bold">Hire Me</span>
-              </a>
-            </MagneticWrap>
+          <Link
+            href="/resume"
+            className="text-xs font-medium text-foreground px-3.5 py-1.5 rounded-md border border-border bg-card hover:bg-cardHover transition-all shadow-2xs"
+          >
+            Resume
+          </Link>
+          <a
+            href="#contact"
+            className="text-xs font-medium text-white px-3.5 py-1.5 rounded-md bg-accent hover:bg-accent-hover transition-colors shadow-2xs"
+          >
+            Get in Touch
+          </a>
+        </div>
+
+        {/* Mobile Actions & Toggle */}
+        <div className="md:hidden flex items-center gap-2">
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-md border border-border bg-card text-muted hover:text-foreground"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <HiSun size={16} className="text-amber-400" />
+              ) : (
+                <HiMoon size={16} className="text-[#555555]" />
+              )}
+            </button>
+          )}
+          <Link
+            href="/resume"
+            className="text-xs font-medium text-foreground px-2.5 py-1 rounded border border-border bg-card"
+          >
+            Resume
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 text-foreground hover:text-accent focus:outline-none"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <HiX size={22} /> : <HiMenu size={22} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-card border-b border-border px-6 py-4 space-y-3 shadow-sm">
+          {navItems.map((item) => (
+            <a
+              key={item.name}
+              href={item.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-medium text-muted hover:text-foreground py-1.5"
+            >
+              {item.name}
+            </a>
+          ))}
+          <div className="pt-2 border-t border-border">
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-center text-xs font-medium text-white py-2.5 rounded-md bg-accent"
+            >
+              Get in Touch
+            </a>
           </div>
         </div>
-      </motion.nav>
-    </div>
+      )}
+    </header>
   );
 }
